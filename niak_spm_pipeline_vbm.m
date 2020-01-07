@@ -160,11 +160,11 @@ for num_s = 1:nb_subject
     files_in_tmp              = list_anat{num_s};
 
     files_out_tmp = [opt.folder_out filesep subject filesep subject '_T1w_cropped.nii'];
-    opt_tmp.crop_neck    = 0;
+    opt_tmp.crop_neck    = 0.0;
 
 
     pipeline = psom_add_job(pipeline,name_job,name_brick,files_in_tmp,files_out_tmp,opt_tmp);   
-    	
+        
     % Get filename for linear registration
     files_in_coreg = pipeline.(name_job).files_out;
 
@@ -262,6 +262,10 @@ for num_s = 1:nb_subject
     % Get names for DARTEL
     files_in_dartel.gm.(subject) = pipeline.(name_job).files_out.gm_pve_r;
     files_in_dartel.wm.(subject) = pipeline.(name_job).files_out.wm_pve_r;
+    files_in_deriv.(subject).gm = pipeline.(name_job).files_out.gm_pve;
+    files_in_deriv.(subject).wm = pipeline.(name_job).files_out.wm_pve;
+    files_in_deriv.(subject).csf = pipeline.(name_job).files_out.csf_pve;
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -370,7 +374,32 @@ for num_s = 1:nb_subject
     
     % add job to pipeline
     pipeline = psom_add_job(pipeline,name_job,name_brick,files_in_tmp,files_out_tmp,opt_tmp);
+
+    files_in_deriv.(subject).img = pipeline.(name_job).files_out.smooth.(subject);
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% Perform AAL, TIV, GMA computation                %%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    % Names
+    clear files_in_tmp files_out_tmp opt_tmp
+    name_brick      = 'spm_brick_derivatives';
+    subject         = list_subject{num_s};
+    name_job        = ['derivatives_' subject];
+
+    % Files in
+    files_in_tmp                = files_in_deriv.(subject);
+    files_in_tmp.mask           = files_in.dartel_template.temp_6;
+    files_out_tmp               = [opt.folder_out filesep subject filesep subject '_derivatives.csv'];
+    opt_tmp.flag_test           = opt.flag_test;
+    opt_tmp.folder_out          = '';
+
+    % Add job
+    pipeline = psom_add_job(pipeline,name_job,name_brick,files_in_tmp,files_out_tmp,opt_tmp);
+
+
 end
+
 
 %%%%%%%%%%%%%%%%%%%%%%%
 %% Run the pipeline! %%
@@ -378,6 +407,5 @@ end
 if ~opt.flag_test
     psom_run_pipeline(pipeline,opt.psom);
 end
-
 
 

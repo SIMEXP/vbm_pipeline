@@ -64,7 +64,7 @@ function [pipeline, opt] = niak_spm_pipeline_vbm(files_in,opt)
 %       pipeline.
 %
 % _________________________________________________________________________
-% Copyright (c) Angela Tam, Yasser Iturria-Medina, Pierre Bellec
+% Copyright (c) Angela Tam, Christian Dansereau, Yasser Iturria-Medina, Pierre Bellec
 % Montreal Neurological Institute, 2017
 % Centre de recherche de l'institut de geriatrie de Montreal,
 % Department of Computer Science and Operations Research

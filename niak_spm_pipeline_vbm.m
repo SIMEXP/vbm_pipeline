@@ -393,6 +393,7 @@ for num_s = 1:nb_subject
     files_out_tmp               = [opt.folder_out filesep subject filesep subject '_derivatives.csv'];
     opt_tmp.flag_test           = opt.flag_test;
     opt_tmp.folder_out          = '';
+    opt_tmp.subj_id                 = subject
 
     % Add job
     pipeline = psom_add_job(pipeline,name_job,name_brick,files_in_tmp,files_out_tmp,opt_tmp);

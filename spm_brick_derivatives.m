@@ -36,12 +36,14 @@ function [in,out,opt] = spm_brick_derivatives(in,out,opt)
 % OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 % THE SOFTWARE.
 global gb_psom_name_job
-%% Syntax checksif ~exist('in','var')||~exist('opt','var')
+%% Syntax checks
+if ~exist('in','var')||~exist('opt','var')
     error('spm:brick','syntax: [IN,OUT,OPT] = SPM_BRICK_GET_DERIVATIVES(IN,OUT,OPT).\n Type ''help spm_brick_derivatives'' for more info.')
 end%% Input
 if ~isstruct(in)
   error('IN should be a structure')
-endif opt.flag_test == 1
+end
+if opt.flag_test == 1
     return
 end%%%%%%%%%%%%%%%
 %% Brick starts here
@@ -54,14 +56,21 @@ hdr = spm_vol(fullfile(in.gm));
 hdr = spm_vol(fullfile(in.wm));
 [vol_wm, ~] = spm_read_vols(hdr);% Get header info and read the volume
 hdr = spm_vol(fullfile(in.csf));
-[vol_csf, ~] = spm_read_vols(hdr);tiv = sum(vol_gm) + sum(vol_wm) + sum(vol_csf);
+[vol_csf, ~] = spm_read_vols(hdr);
+tiv = sum(sum(sum(vol_gm))) + sum(sum(sum(vol_wm))) + sum(sum(sum(vol_csf)));
 
 %%%% GMA %%%%
 % Get header info and read the volume
 hdr = spm_vol(fullfile(in.img));
 [vol_img, ~] = spm_read_vols(hdr);% Get header info and read the volume
 hdr = spm_vol(fullfile(in.mask));
-[vol_mask, ~] = spm_read_vols(hdr);gma = mean((vol_img.*vol_mask));mat_tmp = [gma,tiv]% save in csv
+
+[vol_mask, ~] = spm_read_vols(hdr);
+gma = mean(mean(mean(mean((vol_img.*vol_mask)))));
+
+mat_tmp = [gma,tiv]% save in csv
+
 opt_tmp.labels_y = {'GMA' 'TIV'};
-opt_tmp.labels_x = opt.subj_id;
+opt_tmp.labels_x ={opt.subj_id};
+
 niak_write_csv(out,mat_tmp,opt_tmp)

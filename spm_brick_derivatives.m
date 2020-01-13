@@ -7,8 +7,13 @@ function [in,out,opt] = spm_brick_derivatives(in,out,opt)
 %   IMG (string, optional) filename of an image
 %   MASK (string, optional) a 3D mask of the brain
 %   TEMPLATE (string, optional) a 3D map with the relevant parcels
+%   GM  (string, default [rc1 IN]) the grey matter aligned to a common space to use with DARTEL
+%   WM (string, default [rc2 IN]) the white matter,aligned to a common space to use with DARTEL
+%   CSF (string, default [rc3 IN]) cerebrospinal fluid, aligned to a common space to use with DARTEL
+%
 % OUT (structure, with the following fields):
 %   CSV (output file where to save the derivatives)
+%
 % OPT (structure, with the following fields):
 %   FOLDER_OUT (string, default same as IN) the folder where to generate outputs
 %   FLAG_TEST (boolean, default false) flag to run a test without generating outputs
@@ -61,16 +66,22 @@ tiv = sum(sum(sum(vol_gm))) + sum(sum(sum(vol_wm))) + sum(sum(sum(vol_csf)));
 
 %%%% GMA %%%%
 % Get header info and read the volume
-hdr = spm_vol(fullfile(in.img));
-[vol_img, ~] = spm_read_vols(hdr);% Get header info and read the volume
 hdr = spm_vol(fullfile(in.mask));
-
 [vol_mask, ~] = spm_read_vols(hdr);
-gma = mean(mean(mean(mean((vol_img.*vol_mask)))));
+vol_mask = (vol_mask(:,:,:,1) > 0)
+
+hdr = spm_vol(fullfile(in.img));
+[vol_img, ~] = spm_read_vols(hdr);
+vol_img = vol_img(vol_mask); 
+
+gma =(mean(mean(mean(vol_img))))
 
 mat_tmp = [gma,tiv]% save in csv
 
 opt_tmp.labels_y = {'GMA' 'TIV'};
 opt_tmp.labels_x ={opt.subj_id};
+
+
+
 
 niak_write_csv(out,mat_tmp,opt_tmp)

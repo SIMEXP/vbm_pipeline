@@ -159,8 +159,8 @@ for num_s = 1:nb_subject
     % Files in
     files_in_tmp              = list_anat{num_s};
 
-    files_out_tmp = [opt.folder_out filesep subject filesep subject '_T1w_cropped.nii'];
-    opt_tmp.crop_neck    = 0.0;
+    files_out_tmp = [opt.folder_out filesep subject filesep subject '_T1w.nii'];
+    opt_tmp.crop_neck    = 0;
 
 
     pipeline = psom_add_job(pipeline,name_job,name_brick,files_in_tmp,files_out_tmp,opt_tmp);   

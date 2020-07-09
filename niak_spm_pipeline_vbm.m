@@ -404,17 +404,18 @@ for num_s = 1:nb_subject
     %% Zip Nii files                                    %%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    %Get the directory of the file
-    [nii_files_dir,_,_] = fileparts(files_in_deriv.(subject).img)
+    clear files_in_tmp files_out_tmp opt_tm
+    name_brick = 'zip_files';
+    name_job = ['zip_files_' subject];
 
+    % Files in
+    files_in_tmp = files_in_deriv.(subject).img
+    files_out_tmp = '';
+    opt_tmp = '';
 
-    %Get all the nifti files
-    files_glob = glob([nii_files_dir '/*.nii']);
+    % Add job
+    pipeline = psom_add_job(pipeline,name_job,name_brick,files_in_tmp,files_out_tmp,opt_tmp);
 
-    %zip the nifti files
-    for j = 1: numel(files_glob)
-         gzip(files_glob{j},nii_files_dir);
-    end
 
 
 end

@@ -409,7 +409,7 @@ for num_s = 1:nb_subject
     name_job = ['zip_files_' subject];
 
     % Files in
-    files_in_tmp = files_in_deriv.(subject).img
+    files_in_tmp = files_in_deriv.(subject)
     files_out_tmp = '';
     opt_tmp = '';
 

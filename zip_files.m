@@ -30,10 +30,12 @@ global gb_psom_name_job
 %% Brick starts here
 
 %Get the directory of the file
-[nii_files_dir,_,_] = fileparts(in);
+[nii_files_dir,_,_] = fileparts(in.img);
 
 %Get output files 
-out_files =vertcat(glob([nii_files_dir '/smwrc1acpc_*']), glob([nii_files_dir '/rc*acpc_*']));
+%out_files =vertcat(glob([nii_files_dir '/smwrc1acpc_*']), glob([nii_files_dir '/c*acpc_*']));
+
+out_files  = struct2cell(in);
 
 %zip the nifti files
 for j = 1: numel(out_files)

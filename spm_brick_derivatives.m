@@ -82,6 +82,23 @@ opt_tmp.labels_y = {'GMA' 'TIV'};
 opt_tmp.labels_x ={opt.subj_id};
 
 
+%Get the directory of the file
+[nii_files_dir,_,_] = fileparts(in.img);
 
+%Get output files
+out_files  = struct2cell(in);
+
+%gzip the nifti files
+for j = 1: numel(out_files)
+        gzip(out_files{j},nii_files_dir);
+end
+
+%Get remaining nii files
+nii_files = glob([nii_files_dir '/*.nii']);
+
+%delete nii files
+for j = 1: numel(nii_files)
+	delete(nii_files{j});
+end
 
 niak_write_csv(out,mat_tmp,opt_tmp)

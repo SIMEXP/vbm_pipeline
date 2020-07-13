@@ -377,9 +377,9 @@ for num_s = 1:nb_subject
 
     files_in_deriv.(subject).img = pipeline.(name_job).files_out.smooth.(subject);
 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %% Perform AAL, TIV, GMA computation                %%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% Perform AAL, TIV, GMA computation and compress files %
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     % Names
     clear files_in_tmp files_out_tmp opt_tmp
@@ -397,25 +397,6 @@ for num_s = 1:nb_subject
 
     % Add job
     pipeline = psom_add_job(pipeline,name_job,name_brick,files_in_tmp,files_out_tmp,opt_tmp);
-
-
-
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %% Zip Nii files                                    %%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-    clear files_in_tmp files_out_tmp opt_tm
-    name_brick = 'zip_files';
-    name_job = ['zip_files_' subject];
-
-    % Files in
-    files_in_tmp = files_in_deriv.(subject)
-    files_out_tmp = '';
-    opt_tmp = '';
-
-    % Add job
-    pipeline = psom_add_job(pipeline,name_job,name_brick,files_in_tmp,files_out_tmp,opt_tmp);
-
 
 
 end

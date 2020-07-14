@@ -1,7 +1,7 @@
 function [in,out,opt] = spm_brick_derivatives(in,out,opt)
 % [IN,OUT,OPT] = SPM_BRICK_DERIVATIVES(IN,OUT,OPT)
 %
-% Extract derivatives (TIV GMA and AAL template)of an image
+% Extract derivatives (TIV GMA)of an image, gzip final images and clean up all intermediat images
 %
 % IN (structure, with the followings fields):
 %   IMG (string, optional) filename of an image
@@ -81,6 +81,9 @@ mat_tmp = [gma,tiv]% save in csv
 opt_tmp.labels_y = {'GMA' 'TIV'};
 opt_tmp.labels_x ={opt.subj_id};
 
+niak_write_csv(out,mat_tmp,opt_tmp)
+
+%%%%% gzip and cleanup %%%%%
 
 %Get the directory of the file
 [nii_files_dir,_,_] = fileparts(in.img);
@@ -100,5 +103,3 @@ nii_files = glob([nii_files_dir '/*.nii']);
 for j = 1: numel(nii_files)
 	delete(nii_files{j});
 end
-
-niak_write_csv(out,mat_tmp,opt_tmp)
